@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BentoBlocks</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Top Navigation -->
+    <nav class="top-nav">
+        <div class="logo">BentoBlocks</div>
+        <button id="getCodeBtn" class="btn btn-black">
+            Export Code
+        </button>
+    </nav>
+
+    <!-- Main Layout -->
+    <div class="app-layout">
+        <!-- Main Canvas -->
+        <main class="canvas">
+            <div id="gridContainer" class="bento-grid">
+                <!-- Items generated here -->
+            </div>
+
+            <!-- Copyright -->
+            <div class="copyright">
+                &copy; 2026 BentoBlocks. All rights reserved.
+            </div>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="right-sidebar">
+            <!-- Device Toggle -->
+            <div class="sidebar-section">
+                <h3>View Mode</h3>
+                <div class="device-toggle">
+                    <button class="device-btn active" data-view="desktop" title="Desktop">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                            <line x1="8" y1="21" x2="16" y2="21"></line>
+                            <line x1="12" y1="17" x2="12" y2="21"></line>
+                        </svg>
+                    </button>
+                    <button class="device-btn" data-view="tablet" title="Tablet">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                        </svg>
+                    </button>
+                    <button class="device-btn" data-view="mobile" title="Mobile">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
+                            <line x1="12" y1="18" x2="12.01" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Grid Settings <span id="currentViewLabel"
+                        style="font-weight:400; opacity:0.6; font-size:0.8em; margin-left:6px">(Desktop)</span></h3>
+
+                <div class="control-group">
+                    <label>Columns</label>
+                    <input type="number" id="colCount" min="1" max="12" value="4">
+                </div>
+
+                <div class="control-group">
+                    <label>Rows</label>
+                    <input type="number" id="rowCount" min="1" max="12" value="4">
+                </div>
+
+                <div class="control-group">
+                    <label>Gap</label>
+                    <input type="range" id="gapSize" min="0" max="40" value="16">
+                </div>
+
+                <div class="actions-row">
+                    <button id="addBtn" class="btn-icon" title="Add Item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M12 5v14M5 12h14" />
+                        </svg>
+                    </button>
+                    <button id="clearBtn" class="btn-icon btn-danger" title="Clear Grid">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M18 6L6 18M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="divider-horizontal"></div>
+
+            <!-- Item Controls (Contextual) -->
+            <div id="inspectorPanel" class="sidebar-section hidden">
+                <h3>Item Settings</h3>
+
+                <div class="control-group">
+                    <label>Width (Cols)</label>
+                    <div class="stepper">
+                        <button class="step-btn" data-action="dec" data-target="colSpan">-</button>
+                        <span id="colSpanDisplay">1</span>
+                        <button class="step-btn" data-action="inc" data-target="colSpan">+</button>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>Height (Rows)</label>
+                    <div class="stepper">
+                        <button class="step-btn" data-action="dec" data-target="rowSpan">-</button>
+                        <span id="rowSpanDisplay">1</span>
+                        <button class="step-btn" data-action="inc" data-target="rowSpan">+</button>
+                    </div>
+                </div>
+
+                <button id="deleteItemBtn" class="btn btn-full btn-danger-outline">
+                    Delete Item
+                </button>
+            </div>
+
+            <!-- Empty State for Inspector -->
+            <div id="inspectorEmpty" class="sidebar-section empty-state">
+                <p>Select an item to edit</p>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Code Modal -->
+    <div id="codeModal" class="modal-overlay hidden">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Export</h3>
+                <button id="closeModal" class="close-icon">&times;</button>
+            </div>
+            <div class="modal-tabs">
+                <button class="tab active" data-tab="css">CSS</button>
+                <button class="tab" data-tab="html">HTML</button>
+                <button class="tab" data-tab="combined">Combined</button>
+            </div>
+            <div class="code-area">
+                <pre><code id="codeOutput"></code></pre>
+            </div>
+            <button id="copyBtn" class="btn btn-black btn-full">Copy to Clipboard</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
