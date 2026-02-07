@@ -564,6 +564,6 @@ input[type="range"] {
     transform: translateX(-50%);
     font-size: 0.75rem;
     color: var(--text-sec);
-    opacity: 0.6;
+    opacity: 0.4;
     mix-blend-mode: multiply;
 }
